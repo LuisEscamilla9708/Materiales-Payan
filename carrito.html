@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Materiales Payán | Carrito de compras</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <!-- Barra superior -->
+    <div class="top-bar">
+        <div class="container top-bar-content">
+            <span>✔ Envío gratuito dentro de 1 km a la redonda.</span>
+            <span>📦 Los pedidos realizados antes de las 11:00 se enviarán el mismo día.</span>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="main-header">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">MATERIALES PAYÁN</a>
+
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">INICIO</a></li>
+                    <li><a href="productos.html">PRODUCTOS Y SERVICIOS</a></li>
+                    <li><a href="quienes-somos.html">QUIÉNES SOMOS?</a></li>
+                    <li><a href="preguntas.html">PREGUNTAS FRECUENTES</a></li>
+                    <li><a href="agregados.html">AGREGADOS</a></li>
+                    <li><a href="contacto.html">CONTACTO</a></li>
+                </ul>
+            </nav>
+
+            <div class="nav-icons">
+                <button class="icon-btn" aria-label="Favoritos">❤</button>
+                <!-- Aquí sí enlazamos al carrito -->
+                <a href="carrito.html" class="icon-btn" aria-label="Carrito">🛒</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Encabezado del carrito -->
+        <section class="cart-header">
+            <div class="container">
+                <h1>Carrito de compras</h1>
+                <p>
+                    Revisa los materiales que has agregado a tu pedido. Puedes ajustar las cantidades, eliminar productos
+                    y comprobar el total antes de continuar al pago en una plataforma segura.
+                </p>
+            </div>
+        </section>
+
+        <!-- Contenido del carrito -->
+        <section class="cart-main">
+            <div class="container cart-layout">
+                <!-- Lista de productos -->
+                <div class="cart-items">
+                    <div class="cart-items-header">
+                        <span>Producto</span>
+                        <span>Precio</span>
+                        <span>Cantidad</span>
+                        <span>Subtotal</span>
+                        <span></span>
+                    </div>
+
+                    <!-- Producto 1 -->
+                    <div class="cart-item" data-price="250">
+                        <div class="cart-item-product">
+                            <img src="img/cemento-tolteca.jpg" alt="Cemento Tolteca">
+                            <div>
+                                <h3>Cemento Tolteca 50kg</h3>
+                                <p>Ideal para estructuras y castillos. Marca de alta resistencia.</p>
+                            </div>
+                        </div>
+                        <div class="cart-item-price">
+                            MXN 250.00
+                        </div>
+                        <div class="cart-item-qty">
+                            <button class="qty-btn minus">−</button>
+                            <input type="number" min="1" value="2" class="qty-input">
+                            <button class="qty-btn plus">+</button>
+                        </div>
+                        <div class="cart-item-subtotal">
+                            MXN 500.00
+                        </div>
+                        <div class="cart-item-remove">
+                            <button class="link-btn remove-item">Eliminar</button>
+                        </div>
+                    </div>
+
+                    <!-- Producto 2 -->
+                    <div class="cart-item" data-price="150">
+                        <div class="cart-item-product">
+                            <img src="img/cemento-holcim.jpg" alt="Cemento Holcim">
+                            <div>
+                                <h3>Cemento Holcim 25kg</h3>
+                                <p>Para repellados y acabados. Óptima manejabilidad.</p>
+                            </div>
+                        </div>
+                        <div class="cart-item-price">
+                            MXN 150.00
+                        </div>
+                        <div class="cart-item-qty">
+                            <button class="qty-btn minus">−</button>
+                            <input type="number" min="1" value="3" class="qty-input">
+                            <button class="qty-btn plus">+</button>
+                        </div>
+                        <div class="cart-item-subtotal">
+                            MXN 450.00
+                        </div>
+                        <div class="cart-item-remove">
+                            <button class="link-btn remove-item">Eliminar</button>
+                        </div>
+                    </div>
+
+                    <!-- Producto 3 -->
+                    <div class="cart-item" data-price="40">
+                        <div class="cart-item-product">
+                            <img src="img/costal-arena.jpg" alt="Costal de arena">
+                            <div>
+                                <h3>Costal de arena</h3>
+                                <p>Costal de arena para mezcla. Entrega a pie de obra.</p>
+                            </div>
+                        </div>
+                        <div class="cart-item-price">
+                            MXN 40.00
+                        </div>
+                        <div class="cart-item-qty">
+                            <button class="qty-btn minus">−</button>
+                            <input type="number" min="1" value="5" class="qty-input">
+                            <button class="qty-btn plus">+</button>
+                        </div>
+                        <div class="cart-item-subtotal">
+                            MXN 200.00
+                        </div>
+                        <div class="cart-item-remove">
+                            <button class="link-btn remove-item">Eliminar</button>
+                        </div>
+                    </div>
+
+                    <!-- Vaciar carrito -->
+                    <div class="cart-actions">
+                        <button class="link-btn clear-cart">Vaciar carrito</button>
+                        <a href="index.html#catalogo" class="link-btn">Seguir comprando</a>
+                    </div>
+                </div>
+
+                <!-- Resumen del pedido -->
+                <aside class="cart-summary">
+                    <h2>Resumen del pedido</h2>
+
+                    <div class="cart-summary-row">
+                        <span>Subtotal</span>
+                        <span id="cart-subtotal">MXN 1,150.00</span>
+                    </div>
+
+                    <div class="cart-summary-row">
+                        <span>Envío (dentro de 1 km)</span>
+                        <span>Gratis</span>
+                    </div>
+
+                    <div class="cart-summary-row">
+                        <span>Descuento</span>
+                        <span id="cart-discount">MXN 0.00</span>
+                    </div>
+
+                    <hr class="section-divider">
+
+                    <div class="cart-summary-total">
+                        <span>Total</span>
+                        <span id="cart-total">MXN 1,150.00</span>
+                    </div>
+
+                    <p class="cart-summary-note">
+                        El total mostrado es informativo. Al continuar, serás redirigido a una plataforma de pago segura
+                        donde podrás confirmar tu pedido.
+                    </p>
+
+                    <button class="btn-primary cart-pay-btn" id="btnProcederPago">
+                        Proceder al pago seguro
+                    </button>
+
+                    <p class="cart-summary-small">
+                        * Recuerda que los precios ya incluyen IVA.  
+                        * Envío gratuito dentro de 1 km de la sucursal.
+                    </p>
+                </aside>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <span>© 2025 Materiales Payán</span>
+            <span>Diseñado para proyecto escolar</span>
+        </div>
+    </footer>
+
+    <!-- JavaScript del carrito -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const cartItems = document.querySelectorAll(".cart-item");
+            const subtotalEl = document.getElementById("cart-subtotal");
+            const totalEl = document.getElementById("cart-total");
+            const discountEl = document.getElementById("cart-discount");
+            const clearCartBtn = document.querySelector(".clear-cart");
+            const payBtn = document.getElementById("btnProcederPago");
+
+            function formatMoney(amount) {
+                // Formato MXN con dos decimales
+                return "MXN " + amount.toLocaleString("es-MX", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+            }
+
+            function updateTotals() {
+                let subtotal = 0;
+
+                document.querySelectorAll(".cart-item").forEach(item => {
+                    const price = parseFloat(item.dataset.price);
+                    const qtyInput = item.querySelector(".qty-input");
+                    const quantity = parseInt(qtyInput.value, 10) || 0;
+                    const itemSubtotal = price * quantity;
+
+                    item.querySelector(".cart-item-subtotal").textContent = formatMoney(itemSubtotal);
+                    subtotal += itemSubtotal;
+                });
+
+                const discount = 0; // Aquí podrías aplicar cupones, etc.
+                subtotalEl.textContent = formatMoney(subtotal);
+                discountEl.textContent = formatMoney(discount);
+                totalEl.textContent = formatMoney(subtotal - discount);
+            }
+
+            // Eventos para + y −
+            cartItems.forEach(item => {
+                const minusBtn = item.querySelector(".qty-btn.minus");
+                const plusBtn = item.querySelector(".qty-btn.plus");
+                const qtyInput = item.querySelector(".qty-input");
+                const removeBtn = item.querySelector(".remove-item");
+
+                minusBtn.addEventListener("click", () => {
+                    let value = parseInt(qtyInput.value, 10) || 1;
+                    if (value > 1) {
+                        qtyInput.value = value - 1;
+                        updateTotals();
+                    }
+                });
+
+                plusBtn.addEventListener("click", () => {
+                    let value = parseInt(qtyInput.value, 10) || 1;
+                    qtyInput.value = value + 1;
+                    updateTotals();
+                });
+
+                qtyInput.addEventListener("change", () => {
+                    if (qtyInput.value < 1) qtyInput.value = 1;
+                    updateTotals();
+                });
+
+                removeBtn.addEventListener("click", () => {
+                    item.remove();
+                    updateTotals();
+                });
+            });
+
+            // Vaciar carrito
+            if (clearCartBtn) {
+                clearCartBtn.addEventListener("click", () => {
+                    document.querySelectorAll(".cart-item").forEach(item => item.remove());
+                    updateTotals();
+                });
+            }
+
+            // Botón de pago: redirige a página segura
+            if (payBtn) {
+                payBtn.addEventListener("click", () => {
+                    // Aquí podrías guardar el carrito en localStorage o enviarlo al backend.
+                    // De momento solo redirigimos a una página de pago confiable (cámbiala por la real).
+                    window.location.href = "https://ejemplo-pago-seguro.com/checkout";
+                });
+            }
+
+            // Calcular totales al cargar
+            updateTotals();
+        });
+    </script>
+</body>
+</html>
