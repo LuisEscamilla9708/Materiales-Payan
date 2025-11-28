@@ -120,7 +120,7 @@ a {
     min-height: 65vh;
     background-image:
         linear-gradient(120deg, rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.5)),
-        url("img/fondo-ladrillos.jpg"); /* Cambia por tu imagen */
+        url("imagenes/materiales.jpeg"); /* Cambia por tu imagen */
     background-size: cover;
     background-position: center;
     color: var(--blanco);
