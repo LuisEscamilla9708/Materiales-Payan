@@ -21,27 +21,35 @@
     </div>
 
     <!-- Header -->
-    <header class="main-header">
-        <div class="container nav-container">
-            <a href="index.html" class="logo">MATERIALES PAYÁN</a>
+<header class="main-header">
+  <div class="container nav-container">
+    <div class="logo">
+      MATERIALES PAYÁN
+    </div>
 
-            <nav class="main-nav">
-                <ul>
-                    <li><a href="index.html">INICIO</a></li>
-                    <li><a href="productos.html">PRODUCTOS Y SERVICIOS</a></li>
-                    <li><a href="quienes-somos.html">QUIÉNES SOMOS?</a></li>
-                    <li><a href="preguntas.html" class="active">PREGUNTAS FRECUENTES</a></li>
-                    <li><a href="agregados.html">AGREGADOS</a></li>
-                    <li><a href="contacto.html">CONTACTO</a></li>
-                </ul>
-            </nav>
+    <!-- Botón hamburguesa (solo se verá en móvil) -->
+    <button class="hamburger" id="navToggle" aria-label="Abrir menú">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
 
-            <div class="nav-icons">
-                <button class="icon-btn" aria-label="Favoritos">❤</button>
-                <button class="icon-btn" aria-label="Carrito">🛒</button>
-            </div>
-        </div>
-    </header>
+    <nav class="main-nav" id="mainNav">
+      <ul>
+        <li><a href="index.html" class="active">Inicio</a></li>
+        <li><a href="productos.html">Productos y servicios</a></li>
+        <li><a href="quienes-somos.html">Quiénes somos</a></li>
+        <li><a href="preguntas.html">Preguntas frecuentes</a></li>
+        <li><a href="agregados.html">Agregados</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+      </ul>
+    </nav>
+
+    <div class="nav-icons">
+       <button class="icon-btn" aria-label="Carrito">🛒</button>
+    </div>
+  </div>
+</header>
 
     <main>
         <!-- Información general -->
@@ -164,11 +172,13 @@
     </main>
 
     <!-- Footer -->
-    <footer class="footer">
-        <div class="container footer-content">
-            <span>© 2025 Materiales Payán</span>
-            <span>Diseñado para proyecto escolar</span>
-        </div>
-    </footer>
+    <script>
+  const navToggle = document.getElementById('navToggle');
+  const header = document.querySelector('.main-header');
+
+  navToggle.addEventListener('click', () => {
+    header.classList.toggle('nav-open');
+  });
+</script>
 </body>
 </html>
