@@ -107,6 +107,34 @@ a {
     gap: 0.5rem;
 }
 
+
+
+
+
+/* Botón hamburguesa */
+.hamburger {
+    display: none; /* oculto en escritorio */
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 0.2rem;
+}
+
+.hamburger span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background-color: var(--negro);
+    margin: 4px 0;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+
+
+
+
+
+
 .icon-btn {
     border: none;
     background: transparent;
@@ -120,7 +148,7 @@ a {
     min-height: 65vh;
     background-image:
         linear-gradient(120deg, rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.5)),
-        url("imagenes/materiales.jpeg"); /* Cambia por tu imagen */
+        url("imagenes/portad.jpeg"); /* Cambia por tu imagen */
     background-size: cover;
     background-position: center;
     color: var(--blanco);
@@ -422,11 +450,30 @@ a {
 @media (max-width: 768px) {
     .nav-container {
         flex-wrap: wrap;
+        align-items: flex-start;
+    }
+
+    /* Mostrar hamburguesa y ocultar menú por defecto en móvil */
+    .hamburger {
+        display: block;
+        margin-left: auto;
+    }
+
+    .main-nav {
+        display: none;
+        width: 100%;
+        margin-top: 0.5rem;
     }
 
     .main-nav ul {
-        flex-wrap: wrap;
-        justify-content: center;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    /* Cuando el header tenga la clase .nav-open mostramos el menú */
+    .main-header.nav-open .main-nav {
+        display: block;
     }
 
     .hero {
@@ -441,6 +488,7 @@ a {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
+
 
 @media (max-width: 500px) {
     .product-grid {
