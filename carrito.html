@@ -15,7 +15,7 @@
     <!-- Barra superior -->
     <div class="top-bar">
         <div class="container top-bar-content">
-            <span>✔ Envío gratuito dentro de 1 km a la redonda.</span>
+            <span>✔ Envío gratuito dentro de 5 km a la redonda.</span>
             <span>📦 Los pedidos realizados antes de las 11:00 se enviarán el mismo día.</span>
         </div>
     </div>
@@ -38,7 +38,6 @@
 
             <div class="nav-icons">
                 <button class="icon-btn" aria-label="Favoritos">❤</button>
-                <!-- Aquí sí enlazamos al carrito -->
                 <a href="carrito.html" class="icon-btn" aria-label="Carrito">🛒</a>
             </div>
         </div>
@@ -69,80 +68,8 @@
                         <span></span>
                     </div>
 
-                    <!-- Producto 1 -->
-                    <div class="cart-item" data-price="250">
-                        <div class="cart-item-product">
-                            <img src="img/cemento-tolteca.jpg" alt="Cemento Tolteca">
-                            <div>
-                                <h3>Cemento Tolteca 50kg</h3>
-                                <p>Ideal para estructuras y castillos. Marca de alta resistencia.</p>
-                            </div>
-                        </div>
-                        <div class="cart-item-price">
-                            MXN 250.00
-                        </div>
-                        <div class="cart-item-qty">
-                            <button class="qty-btn minus">−</button>
-                            <input type="number" min="1" value="2" class="qty-input">
-                            <button class="qty-btn plus">+</button>
-                        </div>
-                        <div class="cart-item-subtotal">
-                            MXN 500.00
-                        </div>
-                        <div class="cart-item-remove">
-                            <button class="link-btn remove-item">Eliminar</button>
-                        </div>
-                    </div>
-
-                    <!-- Producto 2 -->
-                    <div class="cart-item" data-price="150">
-                        <div class="cart-item-product">
-                            <img src="img/cemento-holcim.jpg" alt="Cemento Holcim">
-                            <div>
-                                <h3>Cemento Holcim 25kg</h3>
-                                <p>Para repellados y acabados. Óptima manejabilidad.</p>
-                            </div>
-                        </div>
-                        <div class="cart-item-price">
-                            MXN 150.00
-                        </div>
-                        <div class="cart-item-qty">
-                            <button class="qty-btn minus">−</button>
-                            <input type="number" min="1" value="3" class="qty-input">
-                            <button class="qty-btn plus">+</button>
-                        </div>
-                        <div class="cart-item-subtotal">
-                            MXN 450.00
-                        </div>
-                        <div class="cart-item-remove">
-                            <button class="link-btn remove-item">Eliminar</button>
-                        </div>
-                    </div>
-
-                    <!-- Producto 3 -->
-                    <div class="cart-item" data-price="40">
-                        <div class="cart-item-product">
-                            <img src="img/costal-arena.jpg" alt="Costal de arena">
-                            <div>
-                                <h3>Costal de arena</h3>
-                                <p>Costal de arena para mezcla. Entrega a pie de obra.</p>
-                            </div>
-                        </div>
-                        <div class="cart-item-price">
-                            MXN 40.00
-                        </div>
-                        <div class="cart-item-qty">
-                            <button class="qty-btn minus">−</button>
-                            <input type="number" min="1" value="5" class="qty-input">
-                            <button class="qty-btn plus">+</button>
-                        </div>
-                        <div class="cart-item-subtotal">
-                            MXN 200.00
-                        </div>
-                        <div class="cart-item-remove">
-                            <button class="link-btn remove-item">Eliminar</button>
-                        </div>
-                    </div>
+                    <!-- AQUÍ se pintarán los productos del carrito -->
+                    <div id="cart-items-container"></div>
 
                     <!-- Vaciar carrito -->
                     <div class="cart-actions">
@@ -157,11 +84,11 @@
 
                     <div class="cart-summary-row">
                         <span>Subtotal</span>
-                        <span id="cart-subtotal">MXN 1,150.00</span>
+                        <span id="cart-subtotal">MXN 0.00</span>
                     </div>
 
                     <div class="cart-summary-row">
-                        <span>Envío (dentro de 1 km)</span>
+                        <span>Envío (dentro de 5 km)</span>
                         <span>Gratis</span>
                     </div>
 
@@ -174,7 +101,7 @@
 
                     <div class="cart-summary-total">
                         <span>Total</span>
-                        <span id="cart-total">MXN 1,150.00</span>
+                        <span id="cart-total">MXN 0.00</span>
                     </div>
 
                     <p class="cart-summary-note">
@@ -199,98 +126,180 @@
     <footer class="footer">
         <div class="container footer-content">
             <span>© 2025 Materiales Payán</span>
-            <span>Diseñado para proyecto escolar</span>
+            <span>Innova LS Tech</span>
         </div>
     </footer>
 
-    <!-- JavaScript del carrito -->
+    <!-- JavaScript del carrito (lee localStorage y pinta productos) -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const cartItems = document.querySelectorAll(".cart-item");
+            const itemsContainer = document.getElementById("cart-items-container");
             const subtotalEl = document.getElementById("cart-subtotal");
             const totalEl = document.getElementById("cart-total");
             const discountEl = document.getElementById("cart-discount");
             const clearCartBtn = document.querySelector(".clear-cart");
             const payBtn = document.getElementById("btnProcederPago");
 
+            // Leer carrito desde localStorage
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
             function formatMoney(amount) {
-                // Formato MXN con dos decimales
                 return "MXN " + amount.toLocaleString("es-MX", {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2
                 });
             }
 
+            function saveCart() {
+                localStorage.setItem("cart", JSON.stringify(cart));
+            }
+
             function updateTotals() {
                 let subtotal = 0;
 
-                document.querySelectorAll(".cart-item").forEach(item => {
+                const items = document.querySelectorAll(".cart-item");
+                if (items.length === 0) {
+                    subtotalEl.textContent = formatMoney(0);
+                    discountEl.textContent = formatMoney(0);
+                    totalEl.textContent = formatMoney(0);
+                    return;
+                }
+
+                items.forEach(item => {
                     const price = parseFloat(item.dataset.price);
                     const qtyInput = item.querySelector(".qty-input");
-                    const quantity = parseInt(qtyInput.value, 10) || 0;
-                    const itemSubtotal = price * quantity;
+                    let quantity = parseInt(qtyInput.value, 10) || 1;
+                    if (quantity < 1) quantity = 1;
+                    qtyInput.value = quantity;
 
+                    const itemSubtotal = price * quantity;
                     item.querySelector(".cart-item-subtotal").textContent = formatMoney(itemSubtotal);
                     subtotal += itemSubtotal;
                 });
 
-                const discount = 0; // Aquí podrías aplicar cupones, etc.
+                const discount = 0; // aquí puedes aplicar cupones si quieres
                 subtotalEl.textContent = formatMoney(subtotal);
                 discountEl.textContent = formatMoney(discount);
                 totalEl.textContent = formatMoney(subtotal - discount);
             }
 
-            // Eventos para + y −
-            cartItems.forEach(item => {
-                const minusBtn = item.querySelector(".qty-btn.minus");
-                const plusBtn = item.querySelector(".qty-btn.plus");
-                const qtyInput = item.querySelector(".qty-input");
-                const removeBtn = item.querySelector(".remove-item");
+            function renderCart() {
+                itemsContainer.innerHTML = "";
 
-                minusBtn.addEventListener("click", () => {
-                    let value = parseInt(qtyInput.value, 10) || 1;
-                    if (value > 1) {
-                        qtyInput.value = value - 1;
-                        updateTotals();
-                    }
-                });
-
-                plusBtn.addEventListener("click", () => {
-                    let value = parseInt(qtyInput.value, 10) || 1;
-                    qtyInput.value = value + 1;
+                if (cart.length === 0) {
+                    itemsContainer.innerHTML = `
+                        <p class="empty-cart">
+                            Tu carrito está vacío.
+                            <a href="index.html#catalogo">Ver productos</a>
+                        </p>
+                    `;
                     updateTotals();
+                    return;
+                }
+
+                cart.forEach(item => {
+                    const div = document.createElement("div");
+                    div.classList.add("cart-item");
+                    div.dataset.price = item.price;
+                    div.dataset.id = item.id;
+
+                    div.innerHTML = `
+                        <div class="cart-item-product">
+                            <img src="${item.img}" alt="${item.name}">
+                            <div>
+                                <h3>${item.name}</h3>
+                            </div>
+                        </div>
+                        <div class="cart-item-price">
+                            ${formatMoney(item.price)}
+                        </div>
+                        <div class="cart-item-qty">
+                            <button class="qty-btn minus" data-action="minus">−</button>
+                            <input type="number" min="1" value="${item.quantity}" class="qty-input">
+                            <button class="qty-btn plus" data-action="plus">+</button>
+                        </div>
+                        <div class="cart-item-subtotal">
+                            ${formatMoney(item.price * item.quantity)}
+                        </div>
+                        <div class="cart-item-remove">
+                            <button class="link-btn remove-item">Eliminar</button>
+                        </div>
+                    `;
+
+                    itemsContainer.appendChild(div);
                 });
 
-                qtyInput.addEventListener("change", () => {
-                    if (qtyInput.value < 1) qtyInput.value = 1;
-                    updateTotals();
-                });
+                updateTotals();
+            }
 
-                removeBtn.addEventListener("click", () => {
-                    item.remove();
+            // Delegación de eventos para +, -, cambio manual y eliminar
+            itemsContainer.addEventListener("click", (e) => {
+                const target = e.target;
+                const itemDiv = target.closest(".cart-item");
+                if (!itemDiv) return;
+
+                const id = itemDiv.dataset.id;
+                const index = cart.findIndex(p => p.id === id);
+                if (index === -1) return;
+
+                if (target.classList.contains("qty-btn")) {
+                    const action = target.dataset.action;
+                    const qtyInput = itemDiv.querySelector(".qty-input");
+                    let qty = parseInt(qtyInput.value, 10) || 1;
+
+                    if (action === "plus") qty++;
+                    if (action === "minus" && qty > 1) qty--;
+
+                    qtyInput.value = qty;
+                    cart[index].quantity = qty;
+                    saveCart();
                     updateTotals();
-                });
+                }
+
+                if (target.classList.contains("remove-item")) {
+                    cart.splice(index, 1);
+                    saveCart();
+                    renderCart();
+                }
+            });
+
+            itemsContainer.addEventListener("change", (e) => {
+                if (!e.target.classList.contains("qty-input")) return;
+
+                const itemDiv = e.target.closest(".cart-item");
+                const id = itemDiv.dataset.id;
+                const index = cart.findIndex(p => p.id === id);
+                if (index === -1) return;
+
+                let qty = parseInt(e.target.value, 10) || 1;
+                if (qty < 1) qty = 1;
+                e.target.value = qty;
+
+                cart[index].quantity = qty;
+                saveCart();
+                updateTotals();
             });
 
             // Vaciar carrito
             if (clearCartBtn) {
                 clearCartBtn.addEventListener("click", () => {
-                    document.querySelectorAll(".cart-item").forEach(item => item.remove());
-                    updateTotals();
+                    cart = [];
+                    saveCart();
+                    renderCart();
                 });
             }
 
-            // Botón de pago: redirige a página segura
+            // Botón de pago
             if (payBtn) {
                 payBtn.addEventListener("click", () => {
-                    // Aquí podrías guardar el carrito en localStorage o enviarlo al backend.
-                    // De momento solo redirigimos a una página de pago confiable (cámbiala por la real).
+                    // Aquí podrías mandar el carrito a un backend o a una pasarela real
+                    saveCart();
                     window.location.href = "https://ejemplo-pago-seguro.com/checkout";
                 });
             }
 
-            // Calcular totales al cargar
-            updateTotals();
+            // Pintar carrito al cargar
+            renderCart();
         });
     </script>
 </body>

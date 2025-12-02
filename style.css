@@ -1412,3 +1412,31 @@ a {
 .btn-mapa:hover {
     background-color: #0056b3;
 }
+
+/***boton de agregar carrito*/
+
+.product-card .add-to-cart-btn {
+    display: inline-block;
+    padding: 6px 14px;          /* Más pequeño */
+    font-size: 0.9rem;          /* Letra un poco más chica */
+    border-radius: 4px;
+    border: 1px solid #d9a400;  /* Borde suave */
+    background-color: #fcfcfc;  /* Amarillo más claro */
+    color: #333;
+    cursor: pointer;
+    font-weight: 500;
+    margin-top: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);  /* Sombra más discreta */
+    transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+.product-card .add-to-cart-btn:hover {
+    background-color: #f0e8d4;  /* Un poco más fuerte al pasar el mouse */
+    transform: translateY(-1px);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+}
+
+.product-card .add-to-cart-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
