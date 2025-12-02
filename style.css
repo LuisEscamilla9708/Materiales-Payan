@@ -1394,3 +1394,21 @@ a {
         align-items: flex-start;
     }
 }
+
+
+/*** boton de preguntas frecuentes ver ubicacion */
+
+.btn-mapa {
+    display: inline-block;
+    padding: 8px 14px;
+    border-radius: 4px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+.btn-mapa:hover {
+    background-color: #0056b3;
+}

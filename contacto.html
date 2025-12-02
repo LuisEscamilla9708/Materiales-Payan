@@ -117,7 +117,7 @@
             <div class="contact-social-icons">
                 <!-- Facebook -->
                 <a
-                    href="https://www.facebook.com/tuPaginaOficial"
+                    href="https://www.facebook.com/profile.php?id=100089982812612"
                     class="contact-method-icon"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -137,7 +137,7 @@
 
                 <!-- (Opcional) Instagram -->
                 <a
-                    href="https://www.instagram.com/tuCuentaOficial"
+                    href="https://www.instagram.com/materialespayan?igsh=cXF6bXNtenphcDd1"
                     class="contact-method-icon"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -166,19 +166,22 @@
                         qué materiales necesitas (con cantidades y medidas si es necesario), para cuándo los requieres y si
                         necesitas factura.
                     </p>
+<form id="contactForm" class="contact-form">
+    <label for="nombre">Nombre *</label>
+    <input type="text" id="nombre" name="nombre" required />
 
-                    <form action="#" method="post" class="contact-form">
-                        <label for="nombre">Nombre *</label>
-                        <input type="text" id="nombre" name="nombre" required />
+    <label for="correo">Dirección de correo electrónico *</label>
+    <input type="email" id="correo" name="correo" required />
 
-                        <label for="correo">Dirección de correo electrónico *</label>
-                        <input type="email" id="correo" name="correo" required />
+    <label for="mensaje">Mensaje *</label>
+    <textarea id="mensaje" name="mensaje" rows="5" required></textarea>
 
-                        <label for="mensaje">Mensaje *</label>
-                        <textarea id="mensaje" name="mensaje" rows="5" required></textarea>
+    <button type="submit" class="btn-primary contact-submit-btn">
+        Enviar formulario
+    </button>
+</form>
 
-                        <button type="submit" class="btn-primary contact-submit-btn">Enviar formulario</button>
-                    </form>
+
                 </div>
 
                 <div class="contact-map-side">
@@ -224,5 +227,44 @@
     header.classList.toggle('nav-open');
   });
 </script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("contactForm");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault(); // evita que recargue la página
+
+      const nombre  = document.getElementById("nombre").value.trim();
+      const correo  = document.getElementById("correo").value.trim();
+      const mensaje = document.getElementById("mensaje").value.trim();
+
+      // 🔹 Configura aquí tus datos:
+      const destinoCorreo   = "materialespayan@gmail.com"; // CAMBIA esto por tu correo
+      const telefonoWhatsApp = "525657792375";        // CAMBIA esto por tu número (código país + número, sin + ni espacios)
+
+      // --------- Email (mailto) ----------
+      const asunto = encodeURIComponent("Nuevo mensaje desde el formulario de contacto");
+      const cuerpo = encodeURIComponent(
+        `Nombre: ${nombre}\nCorreo: ${correo}\n\nMensaje:\n${mensaje}`
+      );
+
+      const mailtoLink = `mailto:${destinoCorreo}?subject=${asunto}&body=${cuerpo}`;
+
+      // abre el cliente de correo
+      window.location.href = mailtoLink;
+
+      // --------- WhatsApp ----------
+      const textoWA = encodeURIComponent(
+        `Nuevo mensaje desde la web:\n\nNombre: ${nombre}\nCorreo: ${correo}\n\nMensaje:\n${mensaje}`
+      );
+
+      const whatsappLink = `https://wa.me/${telefonoWhatsApp}?text=${textoWA}`;
+
+      // abre WhatsApp en una nueva pestaña
+      window.open(whatsappLink, "_blank");
+    });
+  });
+</script>
+
 </body>
 </html>
