@@ -1173,7 +1173,9 @@ a {
 /*---------------------carrito de compras------------------------/
 
 /* ====== Carrito de compras ====== */
-
+h7{
+  font-size: 11px;  
+}
 .cart-header {
     background-color: #f3f3f3;
     padding: 3rem 0 2.5rem;
