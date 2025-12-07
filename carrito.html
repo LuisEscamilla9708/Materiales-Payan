@@ -304,5 +304,49 @@
             renderCart();
         });
     </script>
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+  const payBtn = document.getElementById("btnProcederPago");
+
+  const BACKEND_URL = "https://materiales-payan-backend.onrender.com";
+
+  if (payBtn) {
+    payBtn.addEventListener("click", async () => {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+      if (!cart.length) {
+        alert("Tu carrito está vacío.");
+        return;
+      }
+
+      try {
+        const res = await fetch(`${BACKEND_URL}/api/checkout`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ cart })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          console.error(data);
+          alert(data.error || "No se pudo generar el pago.");
+          return;
+        }
+
+        if (data.checkoutUrl) {
+          window.location.href = data.checkoutUrl;
+        } else {
+          alert("No se recibió URL de checkout.");
+        }
+
+      } catch (err) {
+        console.error(err);
+        alert("Error conectando con el servidor de pagos.");
+      }
+    });
+  }
+});
+</script>
 </body>
 </html>
