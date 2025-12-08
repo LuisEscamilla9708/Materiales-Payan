@@ -4,11 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Materiales Payán | Carrito de compras</title>
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -132,198 +130,192 @@
         </div>
     </footer>
 
-    <!-- JavaScript del carrito (lee localStorage y pinta productos) -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const itemsContainer = document.getElementById("cart-items-container");
-            const subtotalEl = document.getElementById("cart-subtotal");
-            const totalEl = document.getElementById("cart-total");
-            const discountEl = document.getElementById("cart-discount");
-            const clearCartBtn = document.querySelector(".clear-cart");
-            const payBtn = document.getElementById("btnProcederPago");
-
-            // Leer carrito desde localStorage
-            let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-            function formatMoney(amount) {
-                return "MXN " + amount.toLocaleString("es-MX", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                });
-            }
-
-            function saveCart() {
-                localStorage.setItem("cart", JSON.stringify(cart));
-            }
-
-            function updateTotals() {
-                let subtotal = 0;
-
-                const items = document.querySelectorAll(".cart-item");
-                if (items.length === 0) {
-                    subtotalEl.textContent = formatMoney(0);
-                    discountEl.textContent = formatMoney(0);
-                    totalEl.textContent = formatMoney(0);
-                    return;
-                }
-
-                items.forEach(item => {
-                    const price = parseFloat(item.dataset.price);
-                    const qtyInput = item.querySelector(".qty-input");
-                    let quantity = parseInt(qtyInput.value, 10) || 1;
-                    if (quantity < 1) quantity = 1;
-                    qtyInput.value = quantity;
-
-                    const itemSubtotal = price * quantity;
-                    item.querySelector(".cart-item-subtotal").textContent = formatMoney(itemSubtotal);
-                    subtotal += itemSubtotal;
-                });
-
-                const discount = 0; // aquí puedes aplicar cupones si quieres
-                subtotalEl.textContent = formatMoney(subtotal);
-                discountEl.textContent = formatMoney(discount);
-                totalEl.textContent = formatMoney(subtotal - discount);
-            }
-
-            function renderCart() {
-                itemsContainer.innerHTML = "";
-
-                if (cart.length === 0) {
-                    itemsContainer.innerHTML = `
-                        <p class="empty-cart">
-                            Tu carrito está vacío.
-                            <a href="index.html#catalogo">Ver productos</a>
-                        </p>
-                    `;
-                    updateTotals();
-                    return;
-                }
-
-                cart.forEach(item => {
-                    const div = document.createElement("div");
-                    div.classList.add("cart-item");
-                    div.dataset.price = item.price;
-                    div.dataset.id = item.id;
-
-                    div.innerHTML = `
-                        <div class="cart-item-product">
-                            <img src="${item.img}" alt="${item.name}">
-                            <div>
-                                <h3>${item.name}</h3>
-                            </div>
-                        </div>
-                        <div class="cart-item-price">
-                            ${formatMoney(item.price)}
-                        </div>
-                        <div class="cart-item-qty">
-                            <button class="qty-btn minus" data-action="minus">−</button>
-                            <input type="number" min="1" value="${item.quantity}" class="qty-input">
-                            <button class="qty-btn plus" data-action="plus">+</button>
-                        </div>
-                        <div class="cart-item-subtotal">
-                            ${formatMoney(item.price * item.quantity)}
-                        </div>
-                        <div class="cart-item-remove">
-                            <button class="link-btn remove-item">Eliminar</button>
-                        </div>
-                    `;
-
-                    itemsContainer.appendChild(div);
-                });
-
-                updateTotals();
-            }
-
-            // Delegación de eventos para +, -, cambio manual y eliminar
-            itemsContainer.addEventListener("click", (e) => {
-                const target = e.target;
-                const itemDiv = target.closest(".cart-item");
-                if (!itemDiv) return;
-
-                const id = itemDiv.dataset.id;
-                const index = cart.findIndex(p => p.id === id);
-                if (index === -1) return;
-
-                if (target.classList.contains("qty-btn")) {
-                    const action = target.dataset.action;
-                    const qtyInput = itemDiv.querySelector(".qty-input");
-                    let qty = parseInt(qtyInput.value, 10) || 1;
-
-                    if (action === "plus") qty++;
-                    if (action === "minus" && qty > 1) qty--;
-
-                    qtyInput.value = qty;
-                    cart[index].quantity = qty;
-                    saveCart();
-                    updateTotals();
-                }
-
-                if (target.classList.contains("remove-item")) {
-                    cart.splice(index, 1);
-                    saveCart();
-                    renderCart();
-                }
-            });
-
-            itemsContainer.addEventListener("change", (e) => {
-                if (!e.target.classList.contains("qty-input")) return;
-
-                const itemDiv = e.target.closest(".cart-item");
-                const id = itemDiv.dataset.id;
-                const index = cart.findIndex(p => p.id === id);
-                if (index === -1) return;
-
-                let qty = parseInt(e.target.value, 10) || 1;
-                if (qty < 1) qty = 1;
-                e.target.value = qty;
-
-                cart[index].quantity = qty;
-                saveCart();
-                updateTotals();
-            });
-
-            // Vaciar carrito
-            if (clearCartBtn) {
-                clearCartBtn.addEventListener("click", () => {
-                    cart = [];
-                    saveCart();
-                    renderCart();
-                });
-            }
-
-            // Botón de pago
-            if (payBtn) {
-                payBtn.addEventListener("click", () => {
-                    // Aquí podrías mandar el carrito a un backend o a una pasarela real
-                    saveCart();
-                    window.location.href = "https://ejemplo-pago-seguro.com/checkout";
-                });
-            }
-
-            // Pintar carrito al cargar
-            renderCart();
-        });
-    </script>
-    <script>
+   <!-- JavaScript del carrito (lee localStorage, pinta productos y crea checkout con Mercado Pago) -->
+<script>
 document.addEventListener("DOMContentLoaded", function () {
+  const itemsContainer = document.getElementById("cart-items-container");
+  const subtotalEl = document.getElementById("cart-subtotal");
+  const totalEl = document.getElementById("cart-total");
+  const discountEl = document.getElementById("cart-discount");
+  const clearCartBtn = document.querySelector(".clear-cart");
   const payBtn = document.getElementById("btnProcederPago");
 
   const BACKEND_URL = "https://materiales-payan-backend.onrender.com";
 
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  function formatMoney(amount) {
+    const num = Number(amount) || 0;
+    return "MXN " + num.toLocaleString("es-MX", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  }
+
+  function saveCart() {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }
+
+  function updateTotals() {
+    let subtotal = 0;
+    const items = document.querySelectorAll(".cart-item");
+
+    if (items.length === 0) {
+      subtotalEl.textContent = formatMoney(0);
+      discountEl.textContent = formatMoney(0);
+      totalEl.textContent = formatMoney(0);
+      return;
+    }
+
+    items.forEach(item => {
+      const price = parseFloat(item.dataset.price) || 0;
+      const qtyInput = item.querySelector(".qty-input");
+      let quantity = parseInt(qtyInput.value, 10) || 1;
+
+      if (quantity < 1) quantity = 1;
+      qtyInput.value = quantity;
+
+      const itemSubtotal = price * quantity;
+      const subtotalElItem = item.querySelector(".cart-item-subtotal");
+      if (subtotalElItem) subtotalElItem.textContent = formatMoney(itemSubtotal);
+
+      subtotal += itemSubtotal;
+    });
+
+    const discount = 0;
+    subtotalEl.textContent = formatMoney(subtotal);
+    discountEl.textContent = formatMoney(discount);
+    totalEl.textContent = formatMoney(subtotal - discount);
+  }
+
+  function renderCart() {
+    itemsContainer.innerHTML = "";
+
+    if (!cart.length) {
+      itemsContainer.innerHTML = `
+        <p class="empty-cart">
+          Tu carrito está vacío.
+          <a href="index.html#catalogo">Ver productos</a>
+        </p>
+      `;
+      updateTotals();
+      return;
+    }
+
+    cart.forEach(item => {
+      const div = document.createElement("div");
+      div.classList.add("cart-item");
+      div.dataset.price = item.price;
+      div.dataset.id = item.id;
+
+      div.innerHTML = `
+        <div class="cart-item-product">
+          <img src="${item.img || ""}" alt="${item.name || "Producto"}">
+          <div>
+            <h3>${item.name || "Producto"}</h3>
+          </div>
+        </div>
+        <div class="cart-item-price">
+          ${formatMoney(item.price)}
+        </div>
+        <div class="cart-item-qty">
+          <button class="qty-btn minus" data-action="minus">−</button>
+          <input type="number" min="1" value="${item.quantity || 1}" class="qty-input">
+          <button class="qty-btn plus" data-action="plus">+</button>
+        </div>
+        <div class="cart-item-subtotal">
+          ${formatMoney((item.price || 0) * (item.quantity || 1))}
+        </div>
+        <div class="cart-item-remove">
+          <button class="link-btn remove-item">Eliminar</button>
+        </div>
+      `;
+
+      itemsContainer.appendChild(div);
+    });
+
+    updateTotals();
+  }
+
+  // +, -, eliminar
+  itemsContainer.addEventListener("click", (e) => {
+    const target = e.target;
+    const itemDiv = target.closest(".cart-item");
+    if (!itemDiv) return;
+
+    const id = itemDiv.dataset.id;
+    const index = cart.findIndex(p => p.id === id);
+    if (index === -1) return;
+
+    if (target.classList.contains("qty-btn")) {
+      const action = target.dataset.action;
+      const qtyInput = itemDiv.querySelector(".qty-input");
+      let qty = parseInt(qtyInput.value, 10) || 1;
+
+      if (action === "plus") qty++;
+      if (action === "minus" && qty > 1) qty--;
+
+      qtyInput.value = qty;
+      cart[index].quantity = qty;
+      saveCart();
+      updateTotals();
+    }
+
+    if (target.classList.contains("remove-item")) {
+      cart.splice(index, 1);
+      saveCart();
+      renderCart();
+    }
+  });
+
+  // cambio manual qty
+  itemsContainer.addEventListener("change", (e) => {
+    if (!e.target.classList.contains("qty-input")) return;
+
+    const itemDiv = e.target.closest(".cart-item");
+    if (!itemDiv) return;
+
+    const id = itemDiv.dataset.id;
+    const index = cart.findIndex(p => p.id === id);
+    if (index === -1) return;
+
+    let qty = parseInt(e.target.value, 10) || 1;
+    if (qty < 1) qty = 1;
+    e.target.value = qty;
+
+    cart[index].quantity = qty;
+    saveCart();
+    updateTotals();
+  });
+
+  // vaciar carrito
+  if (clearCartBtn) {
+    clearCartBtn.addEventListener("click", () => {
+      cart = [];
+      saveCart();
+      renderCart();
+    });
+  }
+
+  // ✅ pago real con backend
   if (payBtn) {
     payBtn.addEventListener("click", async () => {
-      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const currentCart = JSON.parse(localStorage.getItem("cart")) || [];
 
-      if (!cart.length) {
+      if (!currentCart.length) {
         alert("Tu carrito está vacío.");
         return;
       }
+
+      payBtn.disabled = true;
+      const originalText = payBtn.textContent;
+      payBtn.textContent = "Generando pago...";
 
       try {
         const res = await fetch(`${BACKEND_URL}/api/checkout`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ cart })
+          body: JSON.stringify({ cart: currentCart })
         });
 
         const data = await res.json();
@@ -343,10 +335,17 @@ document.addEventListener("DOMContentLoaded", function () {
       } catch (err) {
         console.error(err);
         alert("Error conectando con el servidor de pagos.");
+      } finally {
+        payBtn.disabled = false;
+        payBtn.textContent = originalText;
       }
     });
   }
+
+  renderCart();
 });
 </script>
+
+
 </body>
 </html>
