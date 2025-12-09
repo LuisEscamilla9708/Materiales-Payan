@@ -482,7 +482,7 @@
 
       payBtn.disabled = true;
       const originalText = payBtn.textContent;
-      payBtn.textContent = "Generando pago...";
+      payBtn.textContent = "Generando pago....";
 
       try {
         const res = await fetch(`${BACKEND_URL}/api/checkout`, {
