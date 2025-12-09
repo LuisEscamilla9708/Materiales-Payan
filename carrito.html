@@ -4,9 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Materiales Payán | Carrito de compras</title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -80,14 +82,41 @@
                 <aside class="cart-summary">
                     <h2>Resumen del pedido</h2>
 
+                    <!-- ✅ Datos del cliente -->
+                    <div class="cart-customer-box" style="margin-bottom: 1.2rem;">
+                        <h3 style="font-size: 1.05rem; margin-bottom: 0.6rem; color: var(--negro);">
+                            Datos para entrega
+                        </h3>
+
+                        <label style="font-size:0.9rem; font-weight:500;">Nombre</label>
+                        <input id="customerName" type="text" placeholder="Tu nombre"
+                               style="width:100%; padding:0.55rem 0.6rem; margin:0.25rem 0 0.65rem; border:1px solid var(--gris-borde); font-family:inherit;">
+
+                        <label style="font-size:0.9rem; font-weight:500;">Teléfono WhatsApp</label>
+                        <input id="customerPhone" type="tel" placeholder="Ej. 56xxxxxxxx"
+                               style="width:100%; padding:0.55rem 0.6rem; margin:0.25rem 0 0.65rem; border:1px solid var(--gris-borde); font-family:inherit;">
+
+                        <label style="font-size:0.9rem; font-weight:500;">Código Postal</label>
+                        <input id="customerZip" type="text" placeholder="Ej. 03440"
+                               style="width:100%; padding:0.55rem 0.6rem; margin:0.25rem 0 0.65rem; border:1px solid var(--gris-borde); font-family:inherit;">
+
+                        <button class="btn-secondary" id="btnCalcularEnvio" type="button"
+                                style="width:100%; text-align:center;">
+                            Calcular envío
+                        </button>
+
+                        <p id="shippingInfo" style="font-size:0.88rem; margin-top:0.65rem;"></p>
+                    </div>
+
                     <div class="cart-summary-row">
                         <span>Subtotal</span>
                         <span id="cart-subtotal">MXN 0.00</span>
                     </div>
 
+                    <!-- ✅ Envío dinámico -->
                     <div class="cart-summary-row">
-                        <span>Envío (dentro de 5 km)</span>
-                        <span>Gratis</span>
+                        <span>Envío</span>
+                        <span id="cart-shipping">MXN 0.00</span>
                     </div>
 
                     <div class="cart-summary-row">
@@ -103,7 +132,7 @@
                     </div>
 
                     <p class="cart-summary-note">
-                        El total mostrado es informativo. Al continuar, serás redirigido a una plataforma de pago segura
+                        El total mostrado incluye envío cuando aplique. Al continuar, serás redirigido a una plataforma de pago segura
                         donde podrás confirmar tu pedido.
                     </p>
 
@@ -112,16 +141,15 @@
                     </button>
 
                     <p class="cart-summary-small">
-                  
-                    Factura Masiva
-   
+                        Factura Masiva
                     </p>
                 </aside>
             </div>
         </section>
     </main>
-<br>
-<br>
+
+    <br><br>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="container footer-content">
@@ -130,222 +158,364 @@
         </div>
     </footer>
 
-   <!-- JavaScript del carrito (lee localStorage, pinta productos y crea checkout con Mercado Pago) -->
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  const itemsContainer = document.getElementById("cart-items-container");
-  const subtotalEl = document.getElementById("cart-subtotal");
-  const totalEl = document.getElementById("cart-total");
-  const discountEl = document.getElementById("cart-discount");
-  const clearCartBtn = document.querySelector(".clear-cart");
-  const payBtn = document.getElementById("btnProcederPago");
+    <!-- ✅ JavaScript del carrito + envío + checkout -->
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const itemsContainer = document.getElementById("cart-items-container");
+        const subtotalEl = document.getElementById("cart-subtotal");
+        const shippingEl = document.getElementById("cart-shipping");
+        const totalEl = document.getElementById("cart-total");
+        const discountEl = document.getElementById("cart-discount");
+        const clearCartBtn = document.querySelector(".clear-cart");
+        const payBtn = document.getElementById("btnProcederPago");
 
-  const BACKEND_URL = "https://materiales-payan-backend.onrender.com";
+        const nameInput = document.getElementById("customerName");
+        const phoneInput = document.getElementById("customerPhone");
+        const zipInput = document.getElementById("customerZip");
+        const btnCalcularEnvio = document.getElementById("btnCalcularEnvio");
+        const shippingInfo = document.getElementById("shippingInfo");
 
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const BACKEND_URL = "https://materiales-payan-backend.onrender.com";
 
-  function formatMoney(amount) {
-    const num = Number(amount) || 0;
-    return "MXN " + num.toLocaleString("es-MX", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    });
-  }
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        let shipping = JSON.parse(localStorage.getItem("shipping")) || {
+            distanceKm: 0,
+            cost: 0
+        };
 
-  function saveCart() {
-    localStorage.setItem("cart", JSON.stringify(cart));
-  }
+        // ✅ Regla exacta solicitada:
+        // Hasta 5 km GRATIS
+        // Pasando 5 km -> $80 por km extra
+        function calcShippingCost(distanceKm) {
+            const d = Number(distanceKm) || 0;
+            const extraKm = Math.max(0, d - 5);
+            return extraKm * 80;
+        }
 
-  function updateTotals() {
-    let subtotal = 0;
-    const items = document.querySelectorAll(".cart-item");
+        function formatMoney(amount) {
+            const num = Number(amount) || 0;
+            return "MXN " + num.toLocaleString("es-MX", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
 
-    if (items.length === 0) {
-      subtotalEl.textContent = formatMoney(0);
-      discountEl.textContent = formatMoney(0);
-      totalEl.textContent = formatMoney(0);
-      return;
-    }
+        function saveCart() {
+            localStorage.setItem("cart", JSON.stringify(cart));
+        }
 
-    items.forEach(item => {
-      const price = parseFloat(item.dataset.price) || 0;
-      const qtyInput = item.querySelector(".qty-input");
-      let quantity = parseInt(qtyInput.value, 10) || 1;
+        function saveShipping() {
+            localStorage.setItem("shipping", JSON.stringify(shipping));
+        }
 
-      if (quantity < 1) quantity = 1;
-      qtyInput.value = quantity;
+        function saveCustomer(customer) {
+            localStorage.setItem("customer", JSON.stringify(customer));
+        }
 
-      const itemSubtotal = price * quantity;
-      const subtotalElItem = item.querySelector(".cart-item-subtotal");
-      if (subtotalElItem) subtotalElItem.textContent = formatMoney(itemSubtotal);
+        function updateTotals() {
+            let subtotal = 0;
+            const items = document.querySelectorAll(".cart-item");
 
-      subtotal += itemSubtotal;
-    });
+            if (!items.length) {
+                subtotalEl.textContent = formatMoney(0);
+                discountEl.textContent = formatMoney(0);
+                shippingEl.textContent = formatMoney(0);
+                totalEl.textContent = formatMoney(0);
+                return;
+            }
 
-    const discount = 0;
-    subtotalEl.textContent = formatMoney(subtotal);
-    discountEl.textContent = formatMoney(discount);
-    totalEl.textContent = formatMoney(subtotal - discount);
-  }
+            items.forEach(item => {
+                const price = parseFloat(item.dataset.price) || 0;
+                const qtyInput = item.querySelector(".qty-input");
+                let quantity = parseInt(qtyInput.value, 10) || 1;
 
-  function renderCart() {
-    itemsContainer.innerHTML = "";
+                if (quantity < 1) quantity = 1;
+                qtyInput.value = quantity;
 
-    if (!cart.length) {
-      itemsContainer.innerHTML = `
-        <p class="empty-cart">
-          Tu carrito está vacío.
-          <a href="index.html#catalogo">Ver productos</a>
-        </p>
-      `;
-      updateTotals();
-      return;
-    }
+                const itemSubtotal = price * quantity;
+                const subtotalCell = item.querySelector(".cart-item-subtotal");
+                if (subtotalCell) subtotalCell.textContent = formatMoney(itemSubtotal);
 
-    cart.forEach(item => {
-      const div = document.createElement("div");
-      div.classList.add("cart-item");
-      div.dataset.price = item.price;
-      div.dataset.id = item.id;
+                subtotal += itemSubtotal;
+            });
 
-      div.innerHTML = `
-        <div class="cart-item-product">
-          <img src="${item.img || ""}" alt="${item.name || "Producto"}">
-          <div>
-            <h3>${item.name || "Producto"}</h3>
-          </div>
-        </div>
-        <div class="cart-item-price">
-          ${formatMoney(item.price)}
-        </div>
-        <div class="cart-item-qty">
-          <button class="qty-btn minus" data-action="minus">−</button>
-          <input type="number" min="1" value="${item.quantity || 1}" class="qty-input">
-          <button class="qty-btn plus" data-action="plus">+</button>
-        </div>
-        <div class="cart-item-subtotal">
-          ${formatMoney((item.price || 0) * (item.quantity || 1))}
-        </div>
-        <div class="cart-item-remove">
-          <button class="link-btn remove-item">Eliminar</button>
-        </div>
-      `;
+            const discount = 0;
+            const shipCost = Number(shipping.cost) || 0;
 
-      itemsContainer.appendChild(div);
-    });
+            subtotalEl.textContent = formatMoney(subtotal);
+            discountEl.textContent = formatMoney(discount);
+            shippingEl.textContent = formatMoney(shipCost);
+            totalEl.textContent = formatMoney(subtotal - discount + shipCost);
+        }
 
-    updateTotals();
-  }
+        function renderCart() {
+            itemsContainer.innerHTML = "";
 
-  // +, -, eliminar
-  itemsContainer.addEventListener("click", (e) => {
-    const target = e.target;
-    const itemDiv = target.closest(".cart-item");
-    if (!itemDiv) return;
+            if (!cart.length) {
+                itemsContainer.innerHTML = `
+                    <p class="empty-cart">
+                        Tu carrito está vacío.
+                        <a href="index.html#catalogo">Ver productos</a>
+                    </p>
+                `;
+                updateTotals();
+                return;
+            }
 
-    const id = itemDiv.dataset.id;
-    const index = cart.findIndex(p => p.id === id);
-    if (index === -1) return;
+            cart.forEach(item => {
+                const div = document.createElement("div");
+                div.classList.add("cart-item");
+                div.dataset.price = Number(item.price) || 0;
+                div.dataset.id = String(item.id || "");
 
-    if (target.classList.contains("qty-btn")) {
-      const action = target.dataset.action;
-      const qtyInput = itemDiv.querySelector(".qty-input");
-      let qty = parseInt(qtyInput.value, 10) || 1;
+                const safeName = String(item.name || "Producto");
+                const safeImg = String(item.img || "");
+                const safeQty = Math.max(1, parseInt(item.quantity, 10) || 1);
+                const safePrice = Number(item.price) || 0;
 
-      if (action === "plus") qty++;
-      if (action === "minus" && qty > 1) qty--;
+                div.innerHTML = `
+                    <div class="cart-item-product">
+                        <img src="${safeImg}" alt="${safeName}">
+                        <div>
+                            <h3>${safeName}</h3>
+                        </div>
+                    </div>
+                    <div class="cart-item-price">
+                        ${formatMoney(safePrice)}
+                    </div>
+                    <div class="cart-item-qty">
+                        <button class="qty-btn minus" data-action="minus" type="button">−</button>
+                        <input type="number" min="1" value="${safeQty}" class="qty-input">
+                        <button class="qty-btn plus" data-action="plus" type="button">+</button>
+                    </div>
+                    <div class="cart-item-subtotal">
+                        ${formatMoney(safePrice * safeQty)}
+                    </div>
+                    <div class="cart-item-remove">
+                        <button class="link-btn remove-item" type="button">Eliminar</button>
+                    </div>
+                `;
 
-      qtyInput.value = qty;
-      cart[index].quantity = qty;
-      saveCart();
-      updateTotals();
-    }
+                itemsContainer.appendChild(div);
+            });
 
-    if (target.classList.contains("remove-item")) {
-      cart.splice(index, 1);
-      saveCart();
-      renderCart();
-    }
-  });
+            updateTotals();
+        }
 
-  // cambio manual qty
-  itemsContainer.addEventListener("change", (e) => {
-    if (!e.target.classList.contains("qty-input")) return;
+        // +, -, eliminar
+        itemsContainer.addEventListener("click", (e) => {
+            const target = e.target;
+            const itemDiv = target.closest(".cart-item");
+            if (!itemDiv) return;
 
-    const itemDiv = e.target.closest(".cart-item");
-    if (!itemDiv) return;
+            const id = itemDiv.dataset.id;
+            const index = cart.findIndex(p => String(p.id) === String(id));
+            if (index === -1) return;
 
-    const id = itemDiv.dataset.id;
-    const index = cart.findIndex(p => p.id === id);
-    if (index === -1) return;
+            if (target.classList.contains("qty-btn")) {
+                const action = target.dataset.action;
+                const qtyInput = itemDiv.querySelector(".qty-input");
+                let qty = parseInt(qtyInput.value, 10) || 1;
 
-    let qty = parseInt(e.target.value, 10) || 1;
-    if (qty < 1) qty = 1;
-    e.target.value = qty;
+                if (action === "plus") qty++;
+                if (action === "minus" && qty > 1) qty--;
 
-    cart[index].quantity = qty;
-    saveCart();
-    updateTotals();
-  });
+                qtyInput.value = qty;
+                cart[index].quantity = qty;
+                saveCart();
+                updateTotals();
+            }
 
-  // vaciar carrito
-  if (clearCartBtn) {
-    clearCartBtn.addEventListener("click", () => {
-      cart = [];
-      saveCart();
-      renderCart();
-    });
-  }
-
-  // ✅ pago real con backend
-  if (payBtn) {
-    payBtn.addEventListener("click", async () => {
-      const currentCart = JSON.parse(localStorage.getItem("cart")) || [];
-
-      if (!currentCart.length) {
-        alert("Tu carrito está vacío.");
-        return;
-      }
-
-      payBtn.disabled = true;
-      const originalText = payBtn.textContent;
-      payBtn.textContent = "Generando pago...";
-
-      try {
-        const res = await fetch(`${BACKEND_URL}/api/checkout`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ cart: currentCart })
+            if (target.classList.contains("remove-item")) {
+                cart.splice(index, 1);
+                saveCart();
+                renderCart();
+            }
         });
 
-        const data = await res.json();
+        // cambio manual qty
+        itemsContainer.addEventListener("change", (e) => {
+            if (!e.target.classList.contains("qty-input")) return;
 
-        if (!res.ok) {
-          console.error(data);
-          alert(data.error || "No se pudo generar el pago.");
-          return;
+            const itemDiv = e.target.closest(".cart-item");
+            if (!itemDiv) return;
+
+            const id = itemDiv.dataset.id;
+            const index = cart.findIndex(p => String(p.id) === String(id));
+            if (index === -1) return;
+
+            let qty = parseInt(e.target.value, 10) || 1;
+            if (qty < 1) qty = 1;
+            e.target.value = qty;
+
+            cart[index].quantity = qty;
+            saveCart();
+            updateTotals();
+        });
+
+        // vaciar carrito
+        if (clearCartBtn) {
+            clearCartBtn.addEventListener("click", () => {
+                cart = [];
+                shipping = { distanceKm: 0, cost: 0 };
+                saveCart();
+                saveShipping();
+                renderCart();
+                shippingInfo.textContent = "";
+            });
         }
 
-        if (data.checkoutUrl) {
-          window.location.href = data.checkoutUrl;
-        } else {
-          alert("No se recibió URL de checkout.");
+        // ✅ Calcular envío usando CP con backend
+        async function calculateShipping() {
+            const customer = {
+                name: (nameInput.value || "").trim(),
+                phone: (phoneInput.value || "").trim(),
+                zip: (zipInput.value || "").trim()
+            };
+
+            if (!customer.name || !customer.phone || !customer.zip) {
+                alert("Ingresa Nombre, Teléfono y Código Postal para calcular envío.");
+                return;
+            }
+
+            saveCustomer(customer);
+
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/shipping-quote`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ zip: customer.zip })
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    console.error(data);
+                    alert(data.error || "No se pudo calcular el envío con ese CP.");
+                    return;
+                }
+
+                // Esperamos distanceKm del backend
+                const distanceKm = Number(data.distanceKm) || 0;
+
+                // Si backend manda cost, úsalo; si no, calcula con regla local
+                const costFromApi = Number(data.cost);
+                const finalCost = isNaN(costFromApi) ? calcShippingCost(distanceKm) : costFromApi;
+
+                shipping = {
+                    distanceKm,
+                    cost: finalCost
+                };
+
+                saveShipping();
+
+                shippingInfo.textContent =
+                    distanceKm <= 5
+                    ? "✅ Estás dentro de 5 km. Envío GRATIS."
+                    : `📍 Distancia aprox: ${distanceKm.toFixed(1)} km. Envío: ${formatMoney(finalCost)}.`;
+
+                updateTotals();
+
+            } catch (err) {
+                console.error(err);
+                alert("Error conectando con el servidor para calcular envío.");
+            }
         }
 
-      } catch (err) {
-        console.error(err);
-        alert("Error conectando con el servidor de pagos.");
-      } finally {
-        payBtn.disabled = false;
-        payBtn.textContent = originalText;
-      }
+        if (btnCalcularEnvio) {
+            btnCalcularEnvio.addEventListener("click", calculateShipping);
+        }
+
+        // ✅ Proceder al pago seguro
+        if (payBtn) {
+            payBtn.addEventListener("click", async () => {
+                const currentCart = JSON.parse(localStorage.getItem("cart")) || [];
+                if (!currentCart.length) {
+                    alert("Tu carrito está vacío.");
+                    return;
+                }
+
+                const customer = {
+                    name: (nameInput.value || "").trim(),
+                    phone: (phoneInput.value || "").trim(),
+                    zip: (zipInput.value || "").trim()
+                };
+
+                if (!customer.name || !customer.phone || !customer.zip) {
+                    alert("Por favor ingresa Nombre, Teléfono y Código Postal antes de pagar.");
+                    return;
+                }
+
+                saveCustomer(customer);
+
+                // Si aún no hay envío calculado, intenta calcularlo
+                if (!localStorage.getItem("shipping")) {
+                    await calculateShipping();
+                }
+
+                const currentShipping =
+                    JSON.parse(localStorage.getItem("shipping")) || { distanceKm: 0, cost: 0 };
+
+                payBtn.disabled = true;
+                const originalText = payBtn.textContent;
+                payBtn.textContent = "Generando pago...";
+
+                try {
+                    const res = await fetch(`${BACKEND_URL}/api/checkout`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            cart: currentCart,
+                            customer,
+                            shipping: currentShipping
+                        })
+                    });
+
+                    const data = await res.json();
+
+                    if (!res.ok) {
+                        console.error(data);
+                        alert(data.error || "No se pudo generar el pago.");
+                        return;
+                    }
+
+                    if (data.checkoutUrl) {
+                        window.location.href = data.checkoutUrl;
+                    } else {
+                        alert("No se recibió URL de checkout.");
+                    }
+
+                } catch (err) {
+                    console.error(err);
+                    alert("Error conectando con el servidor de pagos.");
+                } finally {
+                    payBtn.disabled = false;
+                    payBtn.textContent = originalText;
+                }
+            });
+        }
+
+        // Mostrar envío guardado al cargar
+        function renderShippingOnLoad() {
+            const s = JSON.parse(localStorage.getItem("shipping"));
+            if (!s) return;
+
+            shipping = s;
+
+            if (shippingInfo && typeof s.distanceKm !== "undefined") {
+                shippingInfo.textContent =
+                    (Number(s.distanceKm) || 0) <= 5
+                    ? "✅ Envío configurado: GRATIS dentro de 5 km."
+                    : `📍 Envío configurado. Distancia aprox: ${(Number(s.distanceKm)||0).toFixed(1)} km. Costo: ${formatMoney(Number(s.cost)||0)}.`;
+            }
+        }
+
+        // Pintar carrito
+        renderCart();
+        renderShippingOnLoad();
+        updateTotals();
     });
-  }
-
-  renderCart();
-});
-</script>
-
+    </script>
 
 </body>
 </html>
