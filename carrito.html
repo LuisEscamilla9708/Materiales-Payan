@@ -1,532 +1,365 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Materiales Payán | Carrito de compras</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Materiales Payán | Carrito de compras</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
-  <!-- Barra superior -->
-  <div class="top-bar">
-    <div class="container top-bar-content">
-      <span>✔ Envío gratuito dentro de 5 km a la redonda.</span>
-      <span>📦 Los pedidos realizados antes de las 11:00 se enviarán el mismo día.</span>
-    </div>
-  </div>
-
-  <!-- Header -->
-  <header class="main-header">
-    <div class="container nav-container">
-      <a href="index.html" class="logo">MATERIALES PAYÁN</a>
-
-      <nav class="main-nav">
-        <ul>
-          <li><a href="index.html">INICIO</a></li>
-          <li><a href="productos.html">PRODUCTOS Y SERVICIOS</a></li>
-          <li><a href="quienes-somos.html">QUIÉNES SOMOS?</a></li>
-          <li><a href="preguntas.html">PREGUNTAS FRECUENTES</a></li>
-          <li><a href="agregados.html">AGREGADOS</a></li>
-          <li><a href="contacto.html">CONTACTO</a></li>
-        </ul>
-      </nav>
-
-      <div class="nav-icons">
-        <a href="carrito.html" class="icon-btn" aria-label="Carrito">🛒</a>
-      </div>
-    </div>
-  </header>
-
-  <main>
-    <!-- Encabezado del carrito -->
-    <section class="cart-header">
-      <div class="container">
-        <h1>Carrito de compras</h1>
-        <p>
-          Revisa los materiales que has agregado a tu pedido. Puedes ajustar las cantidades, eliminar productos
-          y comprobar el total antes de continuar al pago en una plataforma segura.
-        </p>
-      </div>
-    </section>
-
-    <!-- Contenido del carrito -->
-    <section class="cart-main">
-      <div class="container cart-layout">
-
-        <!-- Lista de productos -->
-        <div class="cart-items">
-          <div class="cart-items-header">
-            <span>Producto</span>
-            <span>Precio</span>
-            <span>Cantidad</span>
-            <span>Subtotal</span>
-            <span></span>
-          </div>
-
-          <!-- AQUÍ se pintarán los productos del carrito -->
-          <div id="cart-items-container"></div>
-
-          <!-- Vaciar carrito -->
-          <div class="cart-actions">
-            <button class="link-btn clear-cart" type="button">Vaciar carrito</button>
-            <a href="index.html#catalogo" class="link-btn">Seguir comprando</a>
-          </div>
+    <!-- Barra superior -->
+    <div class="top-bar">
+        <div class="container top-bar-content">
+            <span>✔ Envío gratuito dentro de 5 km a la redonda.</span>
+            <span>📦 Los pedidos realizados antes de las 11:00 se enviarán el mismo día.</span>
         </div>
-
-        <!-- Resumen del pedido -->
-        <aside class="cart-summary">
-          <h2>Resumen del pedido</h2>
-
-          <!-- Datos del cliente -->
-          <div class="cart-customer-box" style="margin-bottom: 1.2rem;">
-            <h3 style="font-size: 1.05rem; margin-bottom: 0.6rem; color: var(--negro);">
-              Datos para entrega
-            </h3>
-
-            <label style="font-size:0.9rem; font-weight:500;">Nombre</label>
-            <input id="customerName" type="text" placeholder="Tu nombre"
-              style="width:100%; padding:0.55rem 0.6rem; margin:0.25rem 0 0.65rem; border:1px solid var(--gris-borde); font-family:inherit;">
-
-            <label style="font-size:0.9rem; font-weight:500;">Teléfono WhatsApp</label>
-            <input id="customerPhone" type="tel" placeholder="Ej. 56xxxxxxxx"
-              style="width:100%; padding:0.55rem 0.6rem; margin:0.25rem 0 0.65rem; border:1px solid var(--gris-borde); font-family:inherit;">
-
-            <label style="font-size:0.9rem; font-weight:500;">Código Postal</label>
-            <input id="customerZip" type="text" placeholder="Ej. 03440"
-              style="width:100%; padding:0.55rem 0.6rem; margin:0.25rem 0 0.65rem; border:1px solid var(--gris-borde); font-family:inherit;">
-
-            <button class="btn-secondary" id="btnCalcularEnvio" type="button"
-              style="width:100%; text-align:center;">
-              Calcular envío
-            </button>
-
-            <p id="shippingInfo" style="font-size:0.88rem; margin-top:0.65rem;"></p>
-          </div>
-
-          <div class="cart-summary-row">
-            <span>Subtotal</span>
-            <span id="cart-subtotal">MXN 0.00</span>
-          </div>
-
-          <div class="cart-summary-row">
-            <span>Envío</span>
-            <span id="cart-shipping">MXN 0.00</span>
-          </div>
-
-          <div class="cart-summary-row">
-            <span>Descuento</span>
-            <span id="cart-discount">MXN 0.00</span>
-          </div>
-
-          <hr class="section-divider">
-
-          <div class="cart-summary-total">
-            <span>Total</span>
-            <span id="cart-total">MXN 0.00</span>
-          </div>
-
-          <p class="cart-summary-note">
-            El total mostrado incluye envío cuando aplique. Al continuar, serás redirigido a una plataforma de pago segura
-            donde podrás confirmar tu pedido.
-          </p>
-
-          <button class="btn-primary cart-pay-btn" id="btnProcederPago" type="button">
-            Proceder al pago seguro
-          </button>
-
-          <p class="cart-summary-small">
-            Factura Masiva
-          </p>
-        </aside>
-      </div>
-    </section>
-  </main>
-
-  <br><br>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container footer-content">
-      <span>© 2025 Materiales Payán</span>
-      <span>Innova LS Tech</span>
     </div>
-  </footer>
 
-  <!-- ✅ JS FINAL -->
-  <script>
-  document.addEventListener("DOMContentLoaded", function () {
+    <!-- Header -->
+    <header class="main-header">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">MATERIALES PAYÁN</a>
 
-    // ====== ELEMENTOS ======
-    const itemsContainer = document.getElementById("cart-items-container");
-    const subtotalEl = document.getElementById("cart-subtotal");
-    const shippingEl = document.getElementById("cart-shipping");
-    const totalEl = document.getElementById("cart-total");
-    const discountEl = document.getElementById("cart-discount");
-    const clearCartBtn = document.querySelector(".clear-cart");
-    const payBtn = document.getElementById("btnProcederPago");
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">INICIO</a></li>
+                    <li><a href="productos.html">PRODUCTOS Y SERVICIOS</a></li>
+                    <li><a href="quienes-somos.html">QUIÉNES SOMOS?</a></li>
+                    <li><a href="preguntas.html">PREGUNTAS FRECUENTES</a></li>
+                    <li><a href="agregados.html">AGREGADOS</a></li>
+                    <li><a href="contacto.html">CONTACTO</a></li>
+                </ul>
+            </nav>
 
-    const nameInput = document.getElementById("customerName");
-    const phoneInput = document.getElementById("customerPhone");
-    const zipInput = document.getElementById("customerZip");
-    const btnCalcularEnvio = document.getElementById("btnCalcularEnvio");
-    const shippingInfo = document.getElementById("shippingInfo");
+            <div class="nav-icons">
+                <button class="icon-btn" aria-label="Favoritos" type="button">❤</button>
+                <a href="carrito.html" class="icon-btn" aria-label="Carrito">🛒</a>
+            </div>
+        </div>
+    </header>
 
-    // ====== CONFIG ======
-    const BACKEND_URL = "https://materiales-payan-backend.onrender.com";
-    const FREE_KM = 5;
-    const COST_PER_EXTRA_KM = 80;
+    <main>
+        <!-- Encabezado del carrito -->
+        <section class="cart-header">
+            <div class="container">
+                <h1>Carrito de compras</h1>
+                <p>
+                    Revisa los materiales que has agregado a tu pedido. Puedes ajustar las cantidades, eliminar productos
+                    y comprobar el total antes de continuar al pago en una plataforma segura.
+                </p>
+            </div>
+        </section>
 
-    // ====== ESTADO ======
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    let shipping = JSON.parse(localStorage.getItem("shipping")) || { distanceKm: 0, cost: 0 };
-    let customerSaved = JSON.parse(localStorage.getItem("customer")) || null;
+        <!-- Contenido del carrito -->
+        <section class="cart-main">
+            <div class="container cart-layout">
+                <!-- Lista de productos -->
+                <div class="cart-items">
+                    <div class="cart-items-header">
+                        <span>Producto</span>
+                        <span>Precio</span>
+                        <span>Cantidad</span>
+                        <span>Subtotal</span>
+                        <span></span>
+                    </div>
 
-    // ====== HELPERS ======
-    function formatMoney(amount) {
-      const num = Number(amount) || 0;
-      return "MXN " + num.toLocaleString("es-MX", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      });
-    }
+                    <!-- AQUÍ se pintarán los productos del carrito -->
+                    <div id="cart-items-container"></div>
 
-    function calcShippingCost(distanceKm) {
-      const d = Number(distanceKm) || 0;
-      const extraKm = Math.max(0, d - FREE_KM);
-      return Math.round(extraKm * COST_PER_EXTRA_KM * 100) / 100;
-    }
+                    <!-- Vaciar carrito -->
+                    <div class="cart-actions">
+                        <button class="link-btn clear-cart" type="button">Vaciar carrito</button>
+                        <a href="index.html#catalogo" class="link-btn">Seguir comprando</a>
+                    </div>
+                </div>
 
-    function saveCart() {
-      localStorage.setItem("cart", JSON.stringify(cart));
-    }
+                <!-- Resumen del pedido -->
+                <aside class="cart-summary">
+                    <h2>Resumen del pedido</h2>
 
-    function saveShipping() {
-      localStorage.setItem("shipping", JSON.stringify(shipping));
-    }
+                    <div class="cart-summary-row">
+                        <span>Subtotal</span>
+                        <span id="cart-subtotal">MXN 0.00</span>
+                    </div>
 
-    function saveCustomer(customer) {
-      localStorage.setItem("customer", JSON.stringify(customer));
-    }
+                    <!-- ✅ Envío fijo informativo -->
+                    <div class="cart-summary-row">
+                        <span>Envío (dentro de 5 km)</span>
+                        <span>Gratis</span>
+                    </div>
 
-    function getCustomerFromInputs() {
-      return {
-        name: (nameInput.value || "").trim(),
-        phone: (phoneInput.value || "").trim(),
-        postalCode: (zipInput.value || "").trim()
-      };
-    }
+                    <div class="cart-summary-row">
+                        <span>Descuento</span>
+                        <span id="cart-discount">MXN 0.00</span>
+                    </div>
 
-    function fillCustomerOnLoad() {
-      if (!customerSaved) return;
-      nameInput.value = customerSaved.name || "";
-      phoneInput.value = customerSaved.phone || "";
-      zipInput.value = customerSaved.postalCode || "";
-    }
+                    <hr class="section-divider">
 
-    // ====== TOTALES ======
-    function updateTotals() {
-      const items = document.querySelectorAll(".cart-item");
+                    <div class="cart-summary-total">
+                        <span>Total</span>
+                        <span id="cart-total">MXN 0.00</span>
+                    </div>
 
-      if (!items.length) {
-        subtotalEl.textContent = formatMoney(0);
-        discountEl.textContent = formatMoney(0);
-        shippingEl.textContent = formatMoney(0);
-        totalEl.textContent = formatMoney(0);
-        return;
-      }
+                    <p class="cart-summary-note">
+                        El total mostrado es informativo. El envío es gratis dentro de 5 km.
+                        Al continuar, serás redirigido a una plataforma de pago segura
+                        donde podrás confirmar tu pedido.
+                    </p>
 
-      let subtotal = 0;
+                    <button class="btn-primary cart-pay-btn" id="btnProcederPago" type="button">
+                        Proceder al pago seguro
+                    </button>
 
-      items.forEach(item => {
-        const price = parseFloat(item.dataset.price) || 0;
-        const qtyInput = item.querySelector(".qty-input");
-        let quantity = parseInt(qtyInput.value, 10) || 1;
+                    <p class="cart-summary-small">
+                        Factura Masiva
+                    </p>
+                </aside>
+            </div>
+        </section>
+    </main>
 
-        if (quantity < 1) quantity = 1;
-        qtyInput.value = quantity;
+    <br><br>
 
-        const itemSubtotal = price * quantity;
-        item.querySelector(".cart-item-subtotal").textContent = formatMoney(itemSubtotal);
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <span>© 2025 Materiales Payán</span>
+            <span>Innova LS Tech</span>
+        </div>
+    </footer>
 
-        subtotal += itemSubtotal;
-      });
+    <!-- ✅ JavaScript del carrito + checkout -->
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
 
-      const discount = 0;
-      const shipCost = Number(shipping.cost) || 0;
+        const itemsContainer = document.getElementById("cart-items-container");
+        const subtotalEl = document.getElementById("cart-subtotal");
+        const totalEl = document.getElementById("cart-total");
+        const discountEl = document.getElementById("cart-discount");
+        const clearCartBtn = document.querySelector(".clear-cart");
+        const payBtn = document.getElementById("btnProcederPago");
 
-      subtotalEl.textContent = formatMoney(subtotal);
-      discountEl.textContent = formatMoney(discount);
-      shippingEl.textContent = formatMoney(shipCost);
-      totalEl.textContent = formatMoney(subtotal - discount + shipCost);
-    }
+        const BACKEND_URL = "https://materiales-payan-backend.onrender.com";
 
-    // ====== RENDER CARRITO ======
-    function renderCart() {
-      itemsContainer.innerHTML = "";
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-      if (!cart.length) {
-        itemsContainer.innerHTML = `
-          <p class="empty-cart">
-            Tu carrito está vacío.
-            <a href="index.html#catalogo">Ver productos</a>
-          </p>
-        `;
-        updateTotals();
-        return;
-      }
+        function formatMoney(amount) {
+            const num = Number(amount) || 0;
+            return "MXN " + num.toLocaleString("es-MX", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
 
-      cart.forEach(item => {
-        const div = document.createElement("div");
-        div.classList.add("cart-item");
-        div.dataset.price = Number(item.price) || 0;
-        div.dataset.id = String(item.id || "");
+        function saveCart() {
+            localStorage.setItem("cart", JSON.stringify(cart));
+        }
 
-        const safeName = String(item.name || "Producto");
-        const safeImg = String(item.img || "");
-        const safeQty = Math.max(1, parseInt(item.quantity, 10) || 1);
-        const safePrice = Number(item.price) || 0;
+        function updateTotals() {
+            let subtotal = 0;
+            const items = document.querySelectorAll(".cart-item");
 
-        div.innerHTML = `
-          <div class="cart-item-product">
-            <img src="${safeImg}" alt="${safeName}">
-            <div><h3>${safeName}</h3></div>
-          </div>
-          <div class="cart-item-price">${formatMoney(safePrice)}</div>
-          <div class="cart-item-qty">
-            <button class="qty-btn minus" data-action="minus" type="button">−</button>
-            <input type="number" min="1" value="${safeQty}" class="qty-input">
-            <button class="qty-btn plus" data-action="plus" type="button">+</button>
-          </div>
-          <div class="cart-item-subtotal">${formatMoney(safePrice * safeQty)}</div>
-          <div class="cart-item-remove">
-            <button class="link-btn remove-item" type="button">Eliminar</button>
-          </div>
-        `;
+            if (!items.length) {
+                subtotalEl.textContent = formatMoney(0);
+                discountEl.textContent = formatMoney(0);
+                totalEl.textContent = formatMoney(0);
+                return;
+            }
 
-        itemsContainer.appendChild(div);
-      });
+            items.forEach(item => {
+                const price = parseFloat(item.dataset.price) || 0;
+                const qtyInput = item.querySelector(".qty-input");
+                let quantity = parseInt(qtyInput.value, 10) || 1;
 
-      updateTotals();
-    }
+                if (quantity < 1) quantity = 1;
+                qtyInput.value = quantity;
 
-    // ====== EVENTOS CANTIDAD/ELIMINAR ======
-    itemsContainer.addEventListener("click", (e) => {
-      const target = e.target;
-      const itemDiv = target.closest(".cart-item");
-      if (!itemDiv) return;
+                const itemSubtotal = price * quantity;
+                const subtotalCell = item.querySelector(".cart-item-subtotal");
+                if (subtotalCell) subtotalCell.textContent = formatMoney(itemSubtotal);
 
-      const id = itemDiv.dataset.id;
-      const index = cart.findIndex(p => String(p.id) === String(id));
-      if (index === -1) return;
+                subtotal += itemSubtotal;
+            });
 
-      if (target.classList.contains("qty-btn")) {
-        const action = target.dataset.action;
-        const qtyInput = itemDiv.querySelector(".qty-input");
-        let qty = parseInt(qtyInput.value, 10) || 1;
+            const discount = 0;
+            subtotalEl.textContent = formatMoney(subtotal);
+            discountEl.textContent = formatMoney(discount);
 
-        if (action === "plus") qty++;
-        if (action === "minus" && qty > 1) qty--;
+            // ✅ Sin cálculo de envío: total = subtotal - descuento
+            totalEl.textContent = formatMoney(subtotal - discount);
+        }
 
-        qtyInput.value = qty;
-        cart[index].quantity = qty;
+        function renderCart() {
+            itemsContainer.innerHTML = "";
 
-        saveCart();
-        updateTotals();
-      }
+            if (!cart.length) {
+                itemsContainer.innerHTML = `
+                    <p class="empty-cart">
+                        Tu carrito está vacío.
+                        <a href="index.html#catalogo">Ver productos</a>
+                    </p>
+                `;
+                updateTotals();
+                return;
+            }
 
-      if (target.classList.contains("remove-item")) {
-        cart.splice(index, 1);
-        saveCart();
+            cart.forEach(item => {
+                const div = document.createElement("div");
+                div.classList.add("cart-item");
+                div.dataset.price = Number(item.price) || 0;
+                div.dataset.id = String(item.id || "");
+
+                const safeName = String(item.name || "Producto");
+                const safeImg = String(item.img || "");
+                const safeQty = Math.max(1, parseInt(item.quantity, 10) || 1);
+                const safePrice = Number(item.price) || 0;
+
+                div.innerHTML = `
+                    <div class="cart-item-product">
+                        <img src="${safeImg}" alt="${safeName}">
+                        <div>
+                            <h3>${safeName}</h3>
+                        </div>
+                    </div>
+                    <div class="cart-item-price">
+                        ${formatMoney(safePrice)}
+                    </div>
+                    <div class="cart-item-qty">
+                        <button class="qty-btn minus" data-action="minus" type="button">−</button>
+                        <input type="number" min="1" value="${safeQty}" class="qty-input">
+                        <button class="qty-btn plus" data-action="plus" type="button">+</button>
+                    </div>
+                    <div class="cart-item-subtotal">
+                        ${formatMoney(safePrice * safeQty)}
+                    </div>
+                    <div class="cart-item-remove">
+                        <button class="link-btn remove-item" type="button">Eliminar</button>
+                    </div>
+                `;
+
+                itemsContainer.appendChild(div);
+            });
+
+            updateTotals();
+        }
+
+        // +, -, eliminar
+        itemsContainer.addEventListener("click", (e) => {
+            const target = e.target;
+            const itemDiv = target.closest(".cart-item");
+            if (!itemDiv) return;
+
+            const id = itemDiv.dataset.id;
+            const index = cart.findIndex(p => String(p.id) === String(id));
+            if (index === -1) return;
+
+            if (target.classList.contains("qty-btn")) {
+                const action = target.dataset.action;
+                const qtyInput = itemDiv.querySelector(".qty-input");
+                let qty = parseInt(qtyInput.value, 10) || 1;
+
+                if (action === "plus") qty++;
+                if (action === "minus" && qty > 1) qty--;
+
+                qtyInput.value = qty;
+                cart[index].quantity = qty;
+
+                saveCart();
+                updateTotals();
+            }
+
+            if (target.classList.contains("remove-item")) {
+                cart.splice(index, 1);
+                saveCart();
+                renderCart();
+            }
+        });
+
+        // cambio manual qty
+        itemsContainer.addEventListener("change", (e) => {
+            if (!e.target.classList.contains("qty-input")) return;
+
+            const itemDiv = e.target.closest(".cart-item");
+            if (!itemDiv) return;
+
+            const id = itemDiv.dataset.id;
+            const index = cart.findIndex(p => String(p.id) === String(id));
+            if (index === -1) return;
+
+            let qty = parseInt(e.target.value, 10) || 1;
+            if (qty < 1) qty = 1;
+            e.target.value = qty;
+
+            cart[index].quantity = qty;
+            saveCart();
+            updateTotals();
+        });
+
+        // vaciar carrito
+        if (clearCartBtn) {
+            clearCartBtn.addEventListener("click", () => {
+                cart = [];
+                saveCart();
+                renderCart();
+            });
+        }
+
+        // ✅ Proceder al pago seguro (solo carrito)
+        if (payBtn) {
+            payBtn.addEventListener("click", async () => {
+                const currentCart = JSON.parse(localStorage.getItem("cart")) || [];
+
+                if (!currentCart.length) {
+                    alert("Tu carrito está vacío.");
+                    return;
+                }
+
+                payBtn.disabled = true;
+                const originalText = payBtn.textContent;
+                payBtn.textContent = "Generando pago...";
+
+                try {
+                    const res = await fetch(`${BACKEND_URL}/api/checkout`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            cart: currentCart,
+                            shippingCost: 0
+                        })
+                    });
+
+                    const data = await res.json();
+
+                    if (!res.ok) {
+                        console.error(data);
+                        alert(data.error || "No se pudo generar el pago.");
+                        return;
+                    }
+
+                    if (data.checkoutUrl) {
+                        window.location.href = data.checkoutUrl;
+                    } else {
+                        alert("No se recibió URL de checkout.");
+                    }
+
+                } catch (err) {
+                    console.error(err);
+                    alert("Error conectando con el servidor de pagos.");
+                } finally {
+                    payBtn.disabled = false;
+                    payBtn.textContent = originalText;
+                }
+            });
+        }
+
         renderCart();
-      }
     });
-
-    itemsContainer.addEventListener("change", (e) => {
-      if (!e.target.classList.contains("qty-input")) return;
-
-      const itemDiv = e.target.closest(".cart-item");
-      if (!itemDiv) return;
-
-      const id = itemDiv.dataset.id;
-      const index = cart.findIndex(p => String(p.id) === String(id));
-      if (index === -1) return;
-
-      let qty = parseInt(e.target.value, 10) || 1;
-      if (qty < 1) qty = 1;
-      e.target.value = qty;
-
-      cart[index].quantity = qty;
-      saveCart();
-      updateTotals();
-    });
-
-    // ====== VACIAR ======
-    clearCartBtn.addEventListener("click", () => {
-      cart = [];
-      shipping = { distanceKm: 0, cost: 0 };
-
-      saveCart();
-      saveShipping();
-
-      renderCart();
-      shippingInfo.textContent = "";
-    });
-
-    // ====== CALCULAR ENVÍO ======
-    async function calculateShipping() {
-      const customer = getCustomerFromInputs();
-
-      if (!customer.name || !customer.phone || !customer.postalCode) {
-        alert("Ingresa Nombre, Teléfono y Código Postal para calcular envío.");
-        return null;
-      }
-
-      saveCustomer(customer);
-      customerSaved = customer;
-
-      const originalText = btnCalcularEnvio.textContent;
-      btnCalcularEnvio.disabled = true;
-      btnCalcularEnvio.textContent = "Calculando...";
-
-      try {
-        const res = await fetch(`${BACKEND_URL}/api/shipping-quote`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ postalCode: customer.postalCode })
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-          console.error(data);
-          alert(data.error || "No se pudo calcular el envío con ese CP.");
-          return null;
-        }
-
-        const distanceKm = Number(data.distanceKm) || 0;
-
-        // Aplicamos regla oficial del negocio en el front
-        const finalCost = calcShippingCost(distanceKm);
-
-        shipping = { distanceKm, cost: finalCost };
-        saveShipping();
-
-        shippingInfo.textContent =
-          distanceKm <= FREE_KM
-            ? "✅ Estás dentro de 5 km. Envío GRATIS."
-            : `📍 Distancia aprox: ${distanceKm.toFixed(1)} km. Envío: ${formatMoney(finalCost)}.`;
-
-        updateTotals();
-        return shipping;
-
-      } catch (err) {
-        console.error(err);
-        alert("Error conectando con el servidor para calcular envío.");
-        return null;
-      } finally {
-        btnCalcularEnvio.disabled = false;
-        btnCalcularEnvio.textContent = originalText;
-      }
-    }
-
-    btnCalcularEnvio.addEventListener("click", calculateShipping);
-
-    // ====== MOSTRAR ENVÍO GUARDADO ======
-    function renderShippingOnLoad() {
-      const s = JSON.parse(localStorage.getItem("shipping"));
-      if (!s) return;
-
-      shipping = s;
-
-      const d = Number(s.distanceKm) || 0;
-      const c = Number(s.cost) || 0;
-
-      shippingInfo.textContent =
-        d <= FREE_KM
-          ? "✅ Envío GRATIS dentro de 5 km."
-          : `📍 Envío configurado. Distancia aprox: ${d.toFixed(1)} km. Costo: ${formatMoney(c)}.`;
-    }
-
-    // ====== PAGO ======
-    payBtn.addEventListener("click", async () => {
-      const currentCart = JSON.parse(localStorage.getItem("cart")) || [];
-
-      if (!currentCart.length) {
-        alert("Tu carrito está vacío.");
-        return;
-      }
-
-      const customer = getCustomerFromInputs();
-
-      if (!customer.name || !customer.phone || !customer.postalCode) {
-        alert("Por favor ingresa Nombre, Teléfono y Código Postal antes de pagar.");
-        return;
-      }
-
-      saveCustomer(customer);
-      customerSaved = customer;
-
-      if (!localStorage.getItem("shipping")) {
-        const result = await calculateShipping();
-        if (!result) return;
-      }
-
-      const currentShipping =
-        JSON.parse(localStorage.getItem("shipping")) || { distanceKm: 0, cost: 0 };
-
-      payBtn.disabled = true;
-      const originalText = payBtn.textContent;
-      payBtn.textContent = "Generando pago....";
-
-      try {
-        const res = await fetch(`${BACKEND_URL}/api/checkout`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            cart: currentCart,
-            customer,
-            shipping: currentShipping,
-            // extra compat por si un día cambias algo
-            shippingCost: currentShipping.cost
-          })
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-          console.error(data);
-          alert(data.error || "No se pudo generar el pago.");
-          return;
-        }
-
-        if (data.checkoutUrl) {
-          window.location.href = data.checkoutUrl;
-        } else {
-          alert("No se recibió URL de checkout.");
-        }
-
-      } catch (err) {
-        console.error(err);
-        alert("Error conectando con el servidor de pagos.");
-      } finally {
-        payBtn.disabled = false;
-        payBtn.textContent = originalText;
-      }
-    });
-
-    // ====== INIT ======
-    fillCustomerOnLoad();
-    renderCart();
-    renderShippingOnLoad();
-    updateTotals();
-  });
-  </script>
+    </script>
 
 </body>
 </html>
